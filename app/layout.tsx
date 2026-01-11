@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   },
   verification: {
     google: '-z_QNbyHrlJUrnU3vLB6NWhE1ln2rTTWQOsaSR0tzQ4',  // ← 여기에 content 값만 입력
+    other: {
+      'naver-site-verification': 'c4f2f0f085bc2d5342adad27f46616859b95dbd1',
+    },
+    
   },
 }
 
