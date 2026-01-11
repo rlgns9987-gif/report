@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.xn--om2b21cn6ci3lrqdy3uu4b.com'
+  const baseUrl = 'https://www.xn--om2b21cn6ci3lrqdy3uu4b.com'  // 슬래시 제거
   
   // reports.json 읽기
   const fs = require('fs').promises
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'daily' as const,  // as const 추가
       priority: 1,
     },
     ...reportPages,
