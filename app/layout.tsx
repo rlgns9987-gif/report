@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: '고품질의 검증된 레포트로 학습의 방향을 제시합니다',
     type: 'website',
   },
+  verification: {
+    google: '-z_QNbyHrlJUrnU3vLB6NWhE1ln2rTTWQOsaSR0tzQ4',  // ← 여기에 content 값만 입력
+  },
 }
 
 export default function RootLayout({
