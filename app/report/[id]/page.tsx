@@ -11,10 +11,13 @@ interface Report {
 // 동적 메타데이터 생성
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/reports.json`, {
-      cache: 'no-store'
-    })
-    const reports: Report[] = await res.json()
+    // Vercel에서도 작동하는 방식
+    const fs = require('fs').promises
+    const path = require('path')
+    const filePath = path.join(process.cwd(), 'public', 'reports.json')
+    const jsonData = await fs.readFile(filePath, 'utf8')
+    const reports: Report[] = JSON.parse(jsonData)
+    
     const report = reports.find(r => r.id === parseInt(params.id))
     
     if (!report) {
