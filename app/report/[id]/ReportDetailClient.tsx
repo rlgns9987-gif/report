@@ -76,7 +76,7 @@ export default function ReportDetailClient({ id }: { id: string }) {
       />
 
       <div className="detail-page">
-        <button className="back-btn" onClick={() => router.push('/')}>
+        <button className="back-btn" onClick={() => router.back()}>
           ← 목록으로 돌아가기
         </button>
 

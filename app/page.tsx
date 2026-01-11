@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import SearchSection from '@/components/SearchSection'
@@ -17,21 +18,22 @@ export interface Report {
   preview: string
 }
 
-export default function Home() {
+function HomeContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
   const [reports, setReports] = useState<Report[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'))
   const [itemsPerPage] = useState(6)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showContactModal, setShowContactModal] = useState(false)
 
   useEffect(() => {
-    // 세션 스토리지에서 데이터 로드
     const sessionData = sessionStorage.getItem('reportsData')
     if (sessionData) {
       setReports(JSON.parse(sessionData))
     } else {
-      // JSON 파일에서 로드
       fetch('/reports.json')
         .then(res => res.json())
         .then(data => {
@@ -42,26 +44,40 @@ export default function Home() {
     }
   }, [])
 
+  // URL 업데이트
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (searchQuery) params.set('q', searchQuery)
+    if (currentPage > 1) params.set('page', currentPage.toString())
+    
+    const newUrl = params.toString() ? `/?${params.toString()}` : '/'
+    router.replace(newUrl, { scroll: false })
+  }, [searchQuery, currentPage, router])
+
   const handleSearch = (query: string) => {
     setSearchQuery(query)
     setCurrentPage(1)
   }
 
-const filteredReports = reports
-  .map(r => {
-    const query = searchQuery.toLowerCase()
-    const titleMatch = r.title.toLowerCase().includes(query)
-    const previewMatch = r.preview.toLowerCase().includes(query)
-    
-    // 우선순위 점수 부여
-    let score = 0
-    if (titleMatch) score += 2  // 제목 매치 = 높은 점수
-    if (previewMatch) score += 1 // 내용 매치 = 낮은 점수
-    
-    return { ...r, score }
-  })
-  .filter(r => r.score > 0)  // 점수 있는 것만
-  .sort((a, b) => b.score - a.score)  // 점수 높은 순으로 정렬
+  const filteredReports = reports
+    .map(r => {
+      const query = searchQuery.toLowerCase()
+      const titleMatch = r.title.toLowerCase().includes(query)
+      const previewMatch = r.preview.toLowerCase().includes(query)
+      
+      let score = 0
+      if (titleMatch) score += 2
+      if (previewMatch) score += 1
+      
+      return { ...r, score }
+    })
+    .filter(r => r.score > 0)
+    .sort((a, b) => {
+      if (searchQuery) {
+        if (b.score !== a.score) return b.score - a.score
+      }
+      return b.id - a.id
+    })
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
@@ -108,5 +124,13 @@ const filteredReports = reports
         onClose={() => setShowContactModal(false)}
       />
     </>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }
