@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const data = await resend.emails.send({
       from: 'onboarding@resend.dev', // 도메인 연결 전 고정값
       to: 'rlgns9987@gmail.com',       // 테스트용 본인 메일 주소
-      subject: name,
+      subject: "레포트 문의",
       html: `
         <h1>새로운 문의가 접수되었습니다</h1>
         <p><strong>이름:</strong> ${name}</p>

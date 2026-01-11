@@ -47,10 +47,21 @@ export default function Home() {
     setCurrentPage(1)
   }
 
-  const filteredReports = reports.filter(r =>
-    r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.preview.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+const filteredReports = reports
+  .map(r => {
+    const query = searchQuery.toLowerCase()
+    const titleMatch = r.title.toLowerCase().includes(query)
+    const previewMatch = r.preview.toLowerCase().includes(query)
+    
+    // 우선순위 점수 부여
+    let score = 0
+    if (titleMatch) score += 2  // 제목 매치 = 높은 점수
+    if (previewMatch) score += 1 // 내용 매치 = 낮은 점수
+    
+    return { ...r, score }
+  })
+  .filter(r => r.score > 0)  // 점수 있는 것만
+  .sort((a, b) => b.score - a.score)  // 점수 높은 순으로 정렬
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
