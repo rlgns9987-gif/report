@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         description: report.preview.substring(0, 150) + '...',
         type: 'article',
         publishedTime: report.date,
+        siteName: '레포트전부모아',
       },
     }
   } catch (error) {
