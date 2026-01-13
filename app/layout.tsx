@@ -27,6 +27,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: '레포트전부모아',
+              alternateName:'학점은행제 레포트',
+              url: 'https://www.xn--om2b21cn6ci3lrqdy3uu4b.com',
+            }),
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   )
