@@ -20,7 +20,7 @@ export default function Header({ onLoginClick, onContactClick }: HeaderProps) {
     <header>
       <nav>
         <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-          🎓 학점은행 A+
+          🎓 레포트전부모아
         </div>
         <ul className="nav-menu">
           <li>
