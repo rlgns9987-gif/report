@@ -52,6 +52,15 @@ export default function ReportDetailClient({ id }: { id: string }) {
     alert('로그인이 필요한 서비스입니다.\n비회원은 문의해주세요.')
     setShowContactModal(true)
   }
+  const handleBack = () => {
+    if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
+      // 내 사이트에서 왔으면 뒤로가기
+      router.back()
+    } else {
+      // 외부에서 바로 왔으면 메인으로
+      router.push('/')
+    }
+  }
 
   if (!report) {
     return (
@@ -76,7 +85,7 @@ export default function ReportDetailClient({ id }: { id: string }) {
       />
 
       <div className="detail-page">
-        <button className="back-btn" onClick={() => router.back()}>
+        <button className="back-btn" onClick={handleBack}>
           ← 목록으로 돌아가기
         </button>
 
