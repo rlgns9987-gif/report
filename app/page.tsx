@@ -45,18 +45,43 @@ function HomeContent() {
   }, [])
 
   // URL 업데이트
-  useEffect(() => {
-    const params = new URLSearchParams()
-    if (searchQuery) params.set('q', searchQuery)
-    if (currentPage > 1) params.set('page', currentPage.toString())
+  // useEffect(() => {
+  //   const params = new URLSearchParams()
+  //   if (searchQuery) params.set('q', searchQuery)
+  //   if (currentPage > 1) params.set('page', currentPage.toString())
     
-    const newUrl = params.toString() ? `/?${params.toString()}` : '/'
-    router.replace(newUrl, { scroll: false })
-  }, [searchQuery, currentPage, router])
+  //   const newUrl = params.toString() ? `/?${params.toString()}` : '/'
+  //   router.replace(newUrl, { scroll: false })
+  // }, [searchQuery, currentPage, router])
 
+  useEffect(() => {
+    const pageParam = searchParams.get('page')
+    const queryParam = searchParams.get('q')
+    
+    if (pageParam) {
+      setCurrentPage(parseInt(pageParam))
+    }
+    if (queryParam !== null) {
+      setSearchQuery(queryParam)
+    }
+  }, [searchParams])
   const handleSearch = (query: string) => {
     setSearchQuery(query)
     setCurrentPage(1)
+    const params = new URLSearchParams()
+    if (query) params.set('q', query)
+    router.push(`/?${params.toString()}`, { scroll: false })
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    sessionStorage.setItem('lastPage', page.toString())
+    sessionStorage.setItem('lastQuery', searchQuery)
+    
+    const params = new URLSearchParams()
+    if (searchQuery) params.set('q', searchQuery)
+    if (page > 1) params.set('page', page.toString())
+    router.push(`/?${params.toString()}`, { scroll: false })
   }
 
   const filteredReports = reports
@@ -102,7 +127,7 @@ function HomeContent() {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              onPageChange={handlePageChange}
             />
           </>
         ) : (

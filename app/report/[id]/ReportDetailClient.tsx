@@ -53,11 +53,17 @@ export default function ReportDetailClient({ id }: { id: string }) {
     setShowContactModal(true)
   }
   const handleBack = () => {
-    if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
-      // 내 사이트에서 왔으면 뒤로가기
-      router.back()
+    const lastPage = sessionStorage.getItem('lastPage')
+    const lastQuery = sessionStorage.getItem('lastQuery')
+    
+    if (lastPage || lastQuery) {
+      // 저장된 페이지로 이동
+      const params = new URLSearchParams()
+      if (lastQuery) params.set('q', lastQuery)
+      if (lastPage && lastPage !== '1') params.set('page', lastPage)
+      router.push(`/?${params.toString()}`)
     } else {
-      // 외부에서 바로 왔으면 메인으로
+      // 없으면 그냥 메인
       router.push('/')
     }
   }
