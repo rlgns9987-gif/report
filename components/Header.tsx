@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 interface HeaderProps {
@@ -19,8 +20,15 @@ export default function Header({ onLoginClick, onContactClick }: HeaderProps) {
   return (
     <header>
       <nav>
-        <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-          🎓 레포트전부모아
+        <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Image 
+            src="/logo.png" 
+            alt="레포트전부모아" 
+            width={32} 
+            height={32}
+            style={{ objectFit: 'contain' }}
+          />
+          레포트전부모아
         </div>
         <ul className="nav-menu">
           <li>
