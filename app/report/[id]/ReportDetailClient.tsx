@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -14,56 +14,27 @@ interface Report {
   preview: string
 }
 
-export default function ReportDetailClient({ id }: { id: string }) {
+export default function ReportDetailClient({ id, initialReport }: { id: string; initialReport: Report | null }) {
   const router = useRouter()
-  const [report, setReport] = useState<Report | null>(null)
+  const [report] = useState<Report | null>(initialReport)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showContactModal, setShowContactModal] = useState(false)
-
-  useEffect(() => {
-    const sessionData = sessionStorage.getItem('reportsData')
-    let reports: Report[] = []
-
-    if (sessionData) {
-      reports = JSON.parse(sessionData)
-      const foundReport = reports.find(r => r.id === parseInt(id))
-      if (foundReport) {
-        setReport(foundReport)
-      } else {
-        router.push('/')
-      }
-    } else {
-      fetch('/reports.json')
-        .then(res => res.json())
-        .then(data => {
-          sessionStorage.setItem('reportsData', JSON.stringify(data))
-          const foundReport = data.find((r: Report) => r.id === parseInt(id))
-          if (foundReport) {
-            setReport(foundReport)
-          } else {
-            router.push('/')
-          }
-        })
-        .catch(() => router.push('/'))
-    }
-  }, [id, router])
 
   const handleDownload = () => {
     alert('로그인이 필요한 서비스입니다.\n비회원은 문의해주세요.')
     setShowContactModal(true)
   }
+
   const handleBack = () => {
     const lastPage = sessionStorage.getItem('lastPage')
     const lastQuery = sessionStorage.getItem('lastQuery')
-    
+
     if (lastPage || lastQuery) {
-      // 저장된 페이지로 이동
       const params = new URLSearchParams()
       if (lastQuery) params.set('q', lastQuery)
       if (lastPage && lastPage !== '1') params.set('page', lastPage)
       router.push(`/?${params.toString()}`)
     } else {
-      // 없으면 그냥 메인
       router.push('/')
     }
   }
@@ -71,12 +42,12 @@ export default function ReportDetailClient({ id }: { id: string }) {
   if (!report) {
     return (
       <>
-        <Header 
+        <Header
           onLoginClick={() => setShowLoginModal(true)}
           onContactClick={() => setShowContactModal(true)}
         />
         <div className="container" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-          <p>로딩 중...</p>
+          <p>레포트를 찾을 수 없습니다.</p>
         </div>
         <Footer />
       </>
@@ -85,7 +56,7 @@ export default function ReportDetailClient({ id }: { id: string }) {
 
   return (
     <>
-      <Header 
+      <Header
         onLoginClick={() => setShowLoginModal(true)}
         onContactClick={() => setShowContactModal(true)}
       />
@@ -107,9 +78,9 @@ export default function ReportDetailClient({ id }: { id: string }) {
           <div className="preview-content">{report.preview}</div>
 
           <div className="blurred-content">
-            본론 내용이 여기에 계속됩니다... 이론적 배경과 실증 분석, 사례 연구 등이 상세히 포함되어 있습니다. 
-            전문적인 문헌 고찰과 함께 깊이 있는 분석이 이어집니다. 관련 이론들을 체계적으로 정리하고, 
-            실제 사례를 통해 이론의 적용 가능성을 검증합니다. 다양한 선행 연구를 참고하여 학술적 깊이를 더하고, 
+            본론 내용이 여기에 계속됩니다... 이론적 배경과 실증 분석, 사례 연구 등이 상세히 포함되어 있습니다.
+            전문적인 문헌 고찰과 함께 깊이 있는 분석이 이어집니다. 관련 이론들을 체계적으로 정리하고,
+            실제 사례를 통해 이론의 적용 가능성을 검증합니다. 다양한 선행 연구를 참고하여 학술적 깊이를 더하고,
             비판적 분석을 통해 새로운 시사점을 도출합니다.
           </div>
         </div>
