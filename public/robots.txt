@@ -2,3 +2,15 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.xn--om2b21cn6ci3lrqdy3uu4b.com/sitemap.xml
+Sitemap: https://www.xn--om2b21cn6ci3lrqdy3uu4b.com/rss.xml
+```
+
+### 네이버 서치어드바이저에 제출
+
+1. https://searchadvisor.naver.com
+2. 요청 → RSS 제출
+3. `https://www.xn--om2b21cn6ci3lrqdy3uu4b.com/rss.xml`
+
+배포 후 확인:
+```
+https://www.xn--om2b21cn6ci3lrqdy3uu4b.com/rss.xml
