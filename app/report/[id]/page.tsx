@@ -30,10 +30,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     return {
       title: `${report.title} | 학점은행제 A+ 레포트`,
-      description: report.preview.substring(0, 150) + '...',
+      description: report.preview.substring(0, 500) + '...',
       openGraph: {
         title: report.title,
-        description: report.preview.substring(0, 150) + '...',
+        description: report.preview.substring(0, 500) + '...',
         type: 'article',
         publishedTime: report.date,
         siteName: '레포트전부모아',
